@@ -8,20 +8,29 @@ import java.util.logging.Logger;
 
 public class ProgramaConcorrente extends Thread{
     
-    //inicializa todos valores com 0
-    public int totalViews = 0;
-    public int totalLikes = 0;
-    public int totalDislikes = 0;
-    
-    public String linha = "";
-    public String linha2 = "";
-    private String nome;
-    
     public ProgramaConcorrente(String nome){
         this.nome = nome;
     }
     
     public ProgramaConcorrente(){}
+    
+    //inicializa todos valores com 0
+    public static int totalViews = 0;
+    public static int totalLikes = 0;
+    public static int totalDislikes = 0;
+    
+    public static int numLinha = 0;
+    
+    public static String linha = "";
+    public static String linha2 = "";
+    
+    public static String llinha = "";
+    public static String llinha2 = "";
+    
+    private String nome;
+    
+    public static BufferedReader lnr = null;
+    public static BufferedReader lnr2 = null;
     
     public static File arquivo = new File("src/atualizarValores.txt");
     public static File arquivo2 = new File("src/diminuirValores.txt");
@@ -31,155 +40,237 @@ public class ProgramaConcorrente extends Thread{
         return this.nome;
     }
     
-    public int retornaLinhas(File arquivo) throws IOException{
-        LineNumberReader lnr = null;
+    public static int retornaLinhas(File arquivo) throws IOException{
+        
+        LineNumberReader lnr3 = null;
+        
         try {
-            lnr = new LineNumberReader(new FileReader(arquivo));
+            
+            lnr3 = new LineNumberReader(new FileReader(arquivo));
+            
         } catch (FileNotFoundException ex) {
             System.err.println("ERRO: Arquivo não encontrado.");
         }
-        while(lnr.readLine() != null){
-            linha = lnr.readLine();
+        
+        while(lnr3.readLine() != null){
+            linha = lnr3.readLine();
         }
-        return lnr.getLineNumber();
+        
+        return lnr3.getLineNumber();
+        
     }
     
     @Override
     public void run(){
+        
+        BufferedReader lnr = null;
+        BufferedReader lnr2= null;
+        
         try {
             
-            BufferedReader lnr = null;
-            BufferedReader lnr2 = null;
-
-            try {
-                lnr = new BufferedReader(new FileReader(arquivo));
-                lnr2 = new BufferedReader(new FileReader(arquivo2));
-            } catch (FileNotFoundException ex) {
-                System.err.println("ERRO: Arquivo não encontrado.");
-            }
-                processaLinhas(lnr, lnr2, linha, linha2);
-            } catch (IOException ex) {
-                System.err.println("IOException");
+            lnr = new BufferedReader(new FileReader(arquivo));
+            lnr2 = new BufferedReader(new FileReader(arquivo2));
+            
+        } catch (FileNotFoundException ex) {
+            System.err.println("ERRO: Arquivo não encontrado.");
         }
+        
+        String linhaler1 = llinha;
+        String linhaler2 = llinha2;
+        
+        try {
+
+            numLinha = retornaLinhas(arquivo)/10;
+            
+            for(int j = 0; j < numLinha; j++){
+
+                if(linhaler1 != null && linhaler2 != null){
+
+                    processaLinhas(linhaler1, linhaler2);
+
+                }
+                //loop para cara thread pegar sua linha correspondente(10 threads ou seja, cada thread vai ler uma linha
+                //a cada 10 linhas)
+                for(int q = 0; q < 10; q++){
+                    try{
+
+                        linhaler1 = lnr.readLine();
+                        linhaler2 = lnr2.readLine();
+
+                    }catch(IOException ex){
+                        System.err.println("ERRO: IOException");
+                        break;
+                    }
+                    
+                }
+                 
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(ProgramaConcorrente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
     
     public void leitor(File arquivo, File arquivo2) throws IOException, InterruptedException{
         
-        Thread t0 = new ProgramaConcorrente("0");
-        Thread t1 = new ProgramaConcorrente("1");
-        Thread t2 = new ProgramaConcorrente("2");
-        Thread t3 = new ProgramaConcorrente("3");
-        Thread t4 = new ProgramaConcorrente("4");
-        Thread t5 = new ProgramaConcorrente("5");
-        Thread t6 = new ProgramaConcorrente("6");
-        Thread t7 = new ProgramaConcorrente("7");
-        Thread t8 = new ProgramaConcorrente("8");
-        Thread t9 = new ProgramaConcorrente("9"); 
-        
-        BufferedReader lnr = null;
-        BufferedReader lnr2 = null;
+        LineNumberReader lnn = null;
+        LineNumberReader lnn2 = null;
         
         try {
+            
             lnr = new BufferedReader(new FileReader(arquivo));
             lnr2 = new BufferedReader(new FileReader(arquivo2));
+            
+            lnn = new LineNumberReader(new FileReader(arquivo));
+            lnn2 = new LineNumberReader(new FileReader(arquivo2));
+            
         } catch (FileNotFoundException ex) {
             System.err.println("ERRO: Arquivo não encontrado.");
-        }
-       
-        if((lnr.readLine()) != null && (lnr2.readLine()) != null){
-            linha = lnr.readLine();
-            linha2 = lnr2.readLine();
+        } 
+        
+        if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 0) && (lnn2.getLineNumber() == 0)){
+            
+            lnn.readLine();
+            lnn2.readLine();
+            
+            Thread t0 = new ProgramaConcorrente("0");
+            
+            System.out.println("Thread: "+t0.toString()+" iniciada");
             
             t0.start();
-            System.out.println("Thread: "+t0.toString());
+            
         }
 
-        if((lnr.readLine()) != null && (lnr2.readLine()) != null){
-            linha = lnr.readLine();
-            linha2 = lnr2.readLine();
+        if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 1) && (lnn2.getLineNumber() == 1)){
+            
+            lnn.readLine();
+            lnn2.readLine();
+            
+            Thread t1 = new ProgramaConcorrente("1");
+            
+            System.out.println("Thread: "+t1.toString()+" iniciada");
             
             t1.start();
-            System.out.println("Thread: "+t1.toString());
+            
         }
 
-        if((lnr.readLine()) != null && (lnr2.readLine()) != null){
-            linha = lnr.readLine();
-            linha2 = lnr2.readLine();
+        if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 2) && (lnn2.getLineNumber() == 2)){
+            
+            lnn.readLine();
+            lnn2.readLine();
+            
+            Thread t2 = new ProgramaConcorrente("2");
+            
+            System.out.println("Thread: "+t2.toString()+" iniciada");
             
             t2.start();
-            System.out.println("Thread: "+t2.toString());
+            
         }
         
-        if((lnr.readLine()) != null && (lnr2.readLine()) != null){
-            linha = lnr.readLine();
-            linha2 = lnr2.readLine();
-
+        if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 3) && (lnn2.getLineNumber() == 3)){
+            
+            lnn.readLine();
+            lnn2.readLine();
+            
+            Thread t3 = new ProgramaConcorrente("3");
+            
+            System.out.println("Thread: "+t3.toString()+" iniciada");
+            
             t3.start();
-            System.out.println("Thread: "+t3.toString());
+            
         }
 
-        if((lnr.readLine()) != null && (lnr2.readLine()) != null){
-            linha = lnr.readLine();
-            linha2 = lnr2.readLine();
-
+        if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 4) && (lnn2.getLineNumber() == 4)){
+            
+            lnn.readLine();
+            lnn2.readLine();
+            
+            Thread t4 = new ProgramaConcorrente("4");
+            
+            System.out.println("Thread: "+t4.toString()+" iniciada");
+            
             t4.start();
-            System.out.println("Thread: "+t4.toString());
+            
         }
 
-        if((lnr.readLine()) != null && (lnr2.readLine()) != null){
-            linha = lnr.readLine();
-            linha2 = lnr2.readLine();
+        if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 5) && (lnn2.getLineNumber() == 5)){
+            
+            lnn.readLine();
+            lnn2.readLine();
+            
+            Thread t5 = new ProgramaConcorrente("5");
+            
+            System.out.println("Thread: "+t5.toString()+" iniciada");
             
             t5.start();
-            System.out.println("Thread: "+t5.toString());
+            
         }
 
-        if((lnr.readLine()) != null && (lnr2.readLine()) != null){
-            linha = lnr.readLine();
-            linha2 = lnr2.readLine();
-
+        if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 6) && (lnn2.getLineNumber() == 6)){
+            
+            lnn.readLine();
+            lnn2.readLine();
+            
+            Thread t6 = new ProgramaConcorrente("6");
+            
+            System.out.println("Thread: "+t6.toString()+" iniciada");
+            
             t6.start();
-            System.out.println("Thread: "+t6.toString());
+            
         }
 
-        if((lnr.readLine()) != null && (lnr2.readLine()) != null){
-            linha = lnr.readLine();
-            linha2 = lnr2.readLine();
+        if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 7) && (lnn2.getLineNumber() == 7)){
+            
+            lnn.readLine();
+            lnn2.readLine();
+            
+            Thread t7 = new ProgramaConcorrente("7");
+            
+            System.out.println("Thread: "+t7.toString()+" iniciada");
             
             t7.start();
-            System.out.println("Thread: "+t7.toString());
+            
         }
 
-        if((lnr.readLine()) != null && (lnr2.readLine()) != null){
-            linha = lnr.readLine();
-            linha2 = lnr2.readLine();
-
+        if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 8) && (lnn2.getLineNumber() == 8)){
+            
+            lnn.readLine();
+            lnn2.readLine();
+            
+            Thread t8 = new ProgramaConcorrente("8");
+            
+            System.out.println("Thread: "+t8.toString()+" iniciada");
+            
             t8.start();
-            System.out.println("Thread: "+t8.toString());
+            
         }
 
-        if((lnr.readLine()) != null && (lnr2.readLine()) != null){
-            linha = lnr.readLine();
-            linha2 = lnr2.readLine();
-
+        if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 9) && (lnn2.getLineNumber() == 9)){
+            
+            lnn.readLine();
+            lnn2.readLine();
+            
+            Thread t9 = new ProgramaConcorrente("9");
+            
+            System.out.println("Thread: "+t9.toString()+" iniciada");
+            
             t9.start();
-            System.out.println("Thread: "+t9.toString());
+            
         }
-
+        
         lnr.close();
         lnr2.close();
-
+        
     }
     
-    public void processaLinhas(BufferedReader lnr, BufferedReader lnr2,String linha, String linha2) throws IOException{
-        //divide as linhas para a quantidade de Threads
-        int numLinha = retornaLinhas(arquivo)/10;
+    public static void processaLinhas(String llinha, String llinha2) throws IOException{
         
-        for(int i = 0; i < numLinha; i++){
-            
+        if(llinha != null && llinha2 != null){
+
             //StringTokenizer para separar cada dado de cada linha
-            StringTokenizer st = new StringTokenizer(linha);
-            StringTokenizer st2 = new StringTokenizer(linha2);
+            StringTokenizer st = new StringTokenizer(llinha, " ");
+            StringTokenizer st2 = new StringTokenizer(llinha2, " ");
 
             //lendo uma linha do arquivo atualizarValores.txt e armazenando os valores
             int views = Integer.parseInt(st.nextToken());
@@ -190,24 +281,21 @@ public class ProgramaConcorrente extends Thread{
             int invViews = Integer.parseInt(st2.nextToken());
             int invLikes = Integer.parseInt(st2.nextToken());
             int invDislikes = Integer.parseInt(st2.nextToken());
-            
+
             //soma a quantidade de views, likes e dislikes válidos para atualizar
             int attViews = views - invViews;
             int attLikes = likes - invLikes;
             int attDislikes = dislikes - invDislikes;
 
-            System.out.println("Views: "+ attViews+ ", Likes: "+attLikes+", Dislikes: "+attDislikes);
-            
-            linha = lnr.readLine();
-            linha2 = lnr2.readLine();
-            
+            System.out.println("Views: "+attViews+ ", Likes: "+attLikes+", Dislikes: "+attDislikes);
+
             atualizaValores(attViews, attLikes, attDislikes);
             
         }
         
     }
     
-    public synchronized void atualizaValores(int attViews, int attLikes, int attDislikes){
+    public synchronized static void atualizaValores(int attViews, int attLikes, int attDislikes){
         
         //a cada linha lida adiciona os valores válidos para os valores já lidos anteriormente
         totalViews += attViews;
@@ -215,12 +303,13 @@ public class ProgramaConcorrente extends Thread{
         totalDislikes += attDislikes;
         
         System.out.println("Views atualizadas em: "+ totalViews+ ", Likes atualizados em: "+totalLikes+", Dislikes atualizados em: "+totalDislikes);
-            
+        
     }
     
     public static void main(String[] args) throws IOException, InterruptedException{
         
         ProgramaConcorrente pc = new ProgramaConcorrente();
+        
         pc.leitor(arquivo, arquivo2);
         
     }
