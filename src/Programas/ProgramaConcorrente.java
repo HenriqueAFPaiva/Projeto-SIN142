@@ -222,7 +222,9 @@ public class ProgramaConcorrente extends Thread{
     }
     
     public static void main(String[] args) throws IOException, InterruptedException{
+        
         ProgramaConcorrente pc = new ProgramaConcorrente();
         pc.leitor(arquivo, arquivo2);
+        
     }
 }
