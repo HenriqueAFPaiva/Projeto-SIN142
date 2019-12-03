@@ -13,6 +13,8 @@ public class ProgramaConcorrente extends Thread{
     public int totalLikes = 0;
     public int totalDislikes = 0;
     
+    public String linha = "";
+    public String linha2 = "";
     private String nome;
     
     public ProgramaConcorrente(String nome){
@@ -31,7 +33,6 @@ public class ProgramaConcorrente extends Thread{
     
     public int retornaLinhas(File arquivo) throws IOException{
         LineNumberReader lnr = null;
-        String linha = "";
         try {
             lnr = new LineNumberReader(new FileReader(arquivo));
         } catch (FileNotFoundException ex) {
@@ -49,8 +50,6 @@ public class ProgramaConcorrente extends Thread{
             
             BufferedReader lnr = null;
             BufferedReader lnr2 = null;
-            String linha = "";
-            String linha2 = "";
 
             try {
                 lnr = new BufferedReader(new FileReader(arquivo));
@@ -76,8 +75,6 @@ public class ProgramaConcorrente extends Thread{
         Thread t7 = new ProgramaConcorrente("7");
         Thread t8 = new ProgramaConcorrente("8");
         Thread t9 = new ProgramaConcorrente("9"); 
-        String linha = "";
-        String linha2 = "";
         
         BufferedReader lnr = null;
         BufferedReader lnr2 = null;
@@ -213,9 +210,9 @@ public class ProgramaConcorrente extends Thread{
     public synchronized void atualizaValores(int attViews, int attLikes, int attDislikes){
         
         //a cada linha lida adiciona os valores válidos para os valores já lidos anteriormente
-        totalViews = totalViews + attViews;
-        totalLikes = totalLikes + attLikes;
-        totalDislikes = totalDislikes + attDislikes;
+        totalViews += attViews;
+        totalLikes += attLikes;
+        totalDislikes += attDislikes;
         
         System.out.println("Views atualizadas em: "+ totalViews+ ", Likes atualizados em: "+totalLikes+", Dislikes atualizados em: "+totalDislikes);
             
