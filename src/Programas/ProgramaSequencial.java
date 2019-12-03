@@ -11,8 +11,6 @@ public class ProgramaSequencial {
         try {
             BufferedReader br = new BufferedReader(new FileReader(arquivo));
             BufferedReader br2 = new BufferedReader(new FileReader(arquivo2));
-            LineNumberReader lnr = new LineNumberReader(new FileReader(arquivo));
-            LineNumberReader lnr2 = new LineNumberReader(new FileReader(arquivo2));
             
             String linha = "";
             String linha2 = "";
@@ -48,8 +46,8 @@ public class ProgramaSequencial {
                     int attLikes = likes - invLikes;
                     int attDislikes = dislikes - invDislikes;
                     
-                    System.out.println("Views atualizadas em: "+ attViews+ ", Likes atualizados em: "+attLikes+", Dislikes atualizados em: "+attDislikes+", Linha: "+lnr.getLineNumber());
-                    lnr.readLine();
+                    System.out.println("Views atualizadas em: "+ attViews+ ", Likes atualizados em: "+attLikes+", Dislikes atualizados em: "+attDislikes);
+                    
                     //a cada linha lida adiciona os valores válidos para os valores já lidos anteriormente
                     totalViews = totalViews + attViews;
                     totalLikes = totalLikes + attLikes;
@@ -70,21 +68,8 @@ public class ProgramaSequencial {
         }
     }
     
-//    public static void escrever(String arquivo){
-//        try {
-//            BufferedWriter bw = new BufferedWriter(new FileWriter(arquivo));
-//            String linha = "";
-//            Scanner in = new Scanner(System.in);
-//            System.out.println("Escreva: ");
-//            linha = in.nextLine();
-//            bw.append(linha + "\n");
-//            bw.close();
-//        } catch (IOException ex) {
-//            System.err.printf("Arquivo não encontrado.");
-//        }
-//    }
-    
     public static void main(String[] args){
+        
         File arquivo = new File("src/atualizarValores.txt");
         File arquivo2 = new File("src/diminuirValores.txt");
         
