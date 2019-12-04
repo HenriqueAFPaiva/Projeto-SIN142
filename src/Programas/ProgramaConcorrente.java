@@ -40,6 +40,7 @@ public class ProgramaConcorrente extends Thread{
         return this.nome;
     }
     
+    //função para pegar a quantidade de linhas do arquivo
     public static int retornaLinhas(File arquivo) throws IOException{
         
         LineNumberReader lnr3 = null;
@@ -60,6 +61,7 @@ public class ProgramaConcorrente extends Thread{
         
     }
     
+    //função que as Threads executam
     @Override
     public void run(){
         
@@ -79,7 +81,9 @@ public class ProgramaConcorrente extends Thread{
         String linhaler2 = llinha2;
         
         try {
-
+            
+            //pega a quantidade de linhas do arquivo e divide pela quantidade de Threads(10)
+            //para que cada Thread leia a mesma quantidade de linhas
             numLinha = retornaLinhas(arquivo)/10;
             
             for(int j = 0; j < numLinha; j++){
@@ -89,6 +93,7 @@ public class ProgramaConcorrente extends Thread{
                     processaLinhas(linhaler1, linhaler2);
 
                 }
+                
                 //loop para cara thread pegar sua linha correspondente(10 threads ou seja, cada thread vai ler uma linha
                 //a cada 10 linhas)
                 for(int q = 0; q < 10; q++){
@@ -112,6 +117,7 @@ public class ProgramaConcorrente extends Thread{
 
     }
     
+    //função que lê os arquivos e coloca as Threads para processar as linhas
     public void leitor(File arquivo, File arquivo2) throws IOException, InterruptedException{
         
         LineNumberReader lnn = null;
@@ -129,6 +135,7 @@ public class ProgramaConcorrente extends Thread{
             System.err.println("ERRO: Arquivo não encontrado.");
         } 
         
+        //cada if inicia a Thread na sua linha específica
         if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 0) && (lnn2.getLineNumber() == 0)){
             
             lnn.readLine();
@@ -141,7 +148,7 @@ public class ProgramaConcorrente extends Thread{
             t0.start();
             
         }
-
+        
         if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 1) && (lnn2.getLineNumber() == 1)){
             
             lnn.readLine();
@@ -154,7 +161,7 @@ public class ProgramaConcorrente extends Thread{
             t1.start();
             
         }
-
+        
         if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 2) && (lnn2.getLineNumber() == 2)){
             
             lnn.readLine();
@@ -180,7 +187,7 @@ public class ProgramaConcorrente extends Thread{
             t3.start();
             
         }
-
+        
         if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 4) && (lnn2.getLineNumber() == 4)){
             
             lnn.readLine();
@@ -193,7 +200,7 @@ public class ProgramaConcorrente extends Thread{
             t4.start();
             
         }
-
+        
         if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 5) && (lnn2.getLineNumber() == 5)){
             
             lnn.readLine();
@@ -206,7 +213,7 @@ public class ProgramaConcorrente extends Thread{
             t5.start();
             
         }
-
+        
         if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 6) && (lnn2.getLineNumber() == 6)){
             
             lnn.readLine();
@@ -219,7 +226,7 @@ public class ProgramaConcorrente extends Thread{
             t6.start();
             
         }
-
+        
         if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 7) && (lnn2.getLineNumber() == 7)){
             
             lnn.readLine();
@@ -232,7 +239,7 @@ public class ProgramaConcorrente extends Thread{
             t7.start();
             
         }
-
+        
         if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 8) && (lnn2.getLineNumber() == 8)){
             
             lnn.readLine();
@@ -245,7 +252,7 @@ public class ProgramaConcorrente extends Thread{
             t8.start();
             
         }
-
+        
         if((llinha = lnr.readLine()) != null && (llinha2 = lnr2.readLine()) != null && (lnn.getLineNumber() == 9) && (lnn2.getLineNumber() == 9)){
             
             lnn.readLine();
@@ -264,6 +271,7 @@ public class ProgramaConcorrente extends Thread{
         
     }
     
+    //função para processar os dados da linha dos dois arquivos
     public static void processaLinhas(String llinha, String llinha2) throws IOException{
         
         if(llinha != null && llinha2 != null){
@@ -286,15 +294,15 @@ public class ProgramaConcorrente extends Thread{
             int attViews = views - invViews;
             int attLikes = likes - invLikes;
             int attDislikes = dislikes - invDislikes;
-
-            System.out.println("Views: "+attViews+ ", Likes: "+attLikes+", Dislikes: "+attDislikes);
-
+            
             atualizaValores(attViews, attLikes, attDislikes);
             
         }
         
     }
     
+    //função para atualizar os valores totais(seção crítica)
+    //colocamos um monitor
     public synchronized static void atualizaValores(int attViews, int attLikes, int attDislikes){
         
         //a cada linha lida adiciona os valores válidos para os valores já lidos anteriormente
@@ -306,6 +314,7 @@ public class ProgramaConcorrente extends Thread{
         
     }
     
+    //apenas executa o leitor para a leitura dos arquivos começar
     public static void main(String[] args) throws IOException, InterruptedException{
         
         ProgramaConcorrente pc = new ProgramaConcorrente();
@@ -313,4 +322,5 @@ public class ProgramaConcorrente extends Thread{
         pc.leitor(arquivo, arquivo2);
         
     }
+    
 }
